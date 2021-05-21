@@ -41,13 +41,17 @@ typedef struct {
 static void *taosProcessSchedQueue(void *param);
 static void taosDumpSchedulerStatus(void *qhandle, void *tmrId);
 
+// 初始化个什么鬼呢
 void *taosInitScheduler(int queueSize, int numOfThreads, const char *label) {
+  // 为这个队列结构体申请内存
   SSchedQueue *pSched = (SSchedQueue *)calloc(sizeof(SSchedQueue), 1);
   if (pSched == NULL) {
     uError("%s: no enough memory for pSched", label);
     return NULL;
   }
 
+  // 真正的队列申请内存
+  // 一个消息的长度 * 队列长度
   pSched->queue = (SSchedMsg *)calloc(sizeof(SSchedMsg), queueSize);
   if (pSched->queue == NULL) {
     uError("%s: no enough memory for queue", label);
@@ -55,6 +59,7 @@ void *taosInitScheduler(int queueSize, int numOfThreads, const char *label) {
     return NULL;
   }
 
+  // 申请线程内存空间
   pSched->qthread = calloc(sizeof(pthread_t), numOfThreads);
   if (pSched->qthread == NULL) {
     uError("%s: no enough memory for qthread", label);
@@ -63,30 +68,36 @@ void *taosInitScheduler(int queueSize, int numOfThreads, const char *label) {
   }
 
   pSched->queueSize = queueSize;
+  // 复制字符串
   tstrncpy(pSched->label, label, sizeof(pSched->label)); // fix buffer overflow
 
   pSched->fullSlot = 0;
   pSched->emptySlot = 0;
 
+  // 初始化锁
   if (pthread_mutex_init(&pSched->queueMutex, NULL) < 0) {
     uError("init %s:queueMutex failed(%s)", label, strerror(errno));
     taosCleanUpScheduler(pSched);
     return NULL;
   }
 
+  // 初始化信号量，队列为空的信号量
   if (tsem_init(&pSched->emptySem, 0, (unsigned int)pSched->queueSize) != 0) {
     uError("init %s:empty semaphore failed(%s)", label, strerror(errno));
     taosCleanUpScheduler(pSched);
     return NULL;
   }
 
+  // 初始化信号量， 队列满的信号量
   if (tsem_init(&pSched->fullSem, 0, 0) != 0) {
     uError("init %s:full semaphore failed(%s)", label, strerror(errno));
     taosCleanUpScheduler(pSched);
     return NULL;
   }
 
+  // 调度器 stop设置为false
   pSched->stop = false;
+  // 初始化所有线程
   for (int i = 0; i < numOfThreads; ++i) {
     pthread_attr_t attr;
     pthread_attr_init(&attr);
@@ -103,6 +114,7 @@ void *taosInitScheduler(int queueSize, int numOfThreads, const char *label) {
 
   uDebug("%s scheduler is initialized, numOfThreads:%d", label, pSched->numOfThreads);
 
+  // 返回创建好的调度器
   return (void *)pSched;
 }
 

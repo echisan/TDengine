@@ -65,13 +65,14 @@ int64_t user_mktime64(const unsigned int year0, const unsigned int mon0,
 }
 
 // ==== mktime() kernel code =================//
+// 总之就是算出时区跟UTC之间的差值
 static int64_t m_deltaUtc = 0;
-void deltaToUtcInitOnce() {  
+void deltaToUtcInitOnce() {
   struct tm tm = {0};
-  
+
   (void)strptime("1970-01-01 00:00:00", (const char *)("%Y-%m-%d %H:%M:%S"), &tm);
   m_deltaUtc = (int64_t)mktime(&tm);
-  //printf("====delta:%lld\n\n", seconds);	
+  //printf("====delta:%lld\n\n", seconds);
   return;
 }
 
@@ -85,6 +86,7 @@ static int32_t (*parseLocaltimeFp[]) (char* timestr, int64_t* time, int32_t time
   parseLocaltimeWithDst
 }; 
 
+// 获取时间戳， 秒为单位
 int32_t taosGetTimestampSec() { return (int32_t)time(NULL); }
 
 int32_t taosParseTime(char* timestr, int64_t* time, int32_t len, int32_t timePrec, int8_t daylight) {
