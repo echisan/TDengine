@@ -114,6 +114,7 @@ int32_t tscAcquireRpc(const char *key, const char *user, const char *secretEncry
   return 0;
 }
 
+// 初始化客户端
 void taos_init_imp(void) {
   // 打印日志的缓冲区
   char temp[128]  = {0};
@@ -169,6 +170,8 @@ void taos_init_imp(void) {
   if (tscNumOfThreads < 2) {
     tscNumOfThreads = 2;
   }
+  // 初始化调度器（包含线程池，队列）
+  // 应该是所有请求都用这个去操作的吧
   tscQhandle = taosInitScheduler(queueSize, tscNumOfThreads, "tsc");
   if (NULL == tscQhandle) {
     tscError("failed to init scheduler");
@@ -176,16 +179,22 @@ void taos_init_imp(void) {
     return;
   }
 
+  // 初始化什么时间控制器
   tscTmr = taosTmrInit(tsMaxConnections * 2, 200, 60000, "TSC");
   if(0 == tscEmbedded){
     taosTmrReset(tscCheckDiskUsage, 20 * 1000, NULL, tscTmr, &tscCheckDiskUsageTmr);      
   }
 
+  // 如果表元信息空了
   if (tscTableMetaInfo == NULL) {
+    // 不知道又初始化了个啥
     tscObjRef  = taosOpenRef(40960, tscFreeRegisteredSqlObj);
+    // 哈希表
     tscVgroupMap = taosHashInit(256, taosGetDefaultHashFunction(TSDB_DATA_TYPE_INT), true, HASH_ENTRY_LOCK);
+    // 哈希表
     tscTableMetaInfo = taosHashInit(1024, taosGetDefaultHashFunction(TSDB_DATA_TYPE_BINARY), true, HASH_ENTRY_LOCK);
-    tscDebug("TableMeta:%p", tscTableMetaInfo);
+//    tscDebug("TableMeta:%p", tscTableMetaInfo);
+    tscInfo("TableMeta:%p", tscTableMetaInfo);
   }
    
   int refreshTime = 5;

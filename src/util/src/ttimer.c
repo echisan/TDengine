@@ -536,6 +536,8 @@ static void taosTmrModuleInit(void) {
   tmrDebug("timer module is initialized, number of threads: %d", taosTmrThreads);
 }
 
+// taos timer init ?
+// timer Controller?
 void* taosTmrInit(int maxNumOfTmrs, int resolution, int longest, const char* label) {
   const char* ret = monotonicInit();
   tmrInfo("ttimer monotonic clock source:%s", ret);

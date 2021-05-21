@@ -41,7 +41,7 @@ typedef struct {
 static void *taosProcessSchedQueue(void *param);
 static void taosDumpSchedulerStatus(void *qhandle, void *tmrId);
 
-// 初始化个什么鬼呢
+// 初始化调度器
 void *taosInitScheduler(int queueSize, int numOfThreads, const char *label) {
   // 为这个队列结构体申请内存
   SSchedQueue *pSched = (SSchedQueue *)calloc(sizeof(SSchedQueue), 1);
