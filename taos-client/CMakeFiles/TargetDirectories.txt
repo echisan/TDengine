@@ -1,0 +1,2 @@
+/Users/echisan/Develop/iot/TDengine/taos-client/CMakeFiles/rebuild_cache.dir
+/Users/echisan/Develop/iot/TDengine/taos-client/CMakeFiles/edit_cache.dir
