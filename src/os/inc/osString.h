@@ -32,6 +32,7 @@ extern "C" {
   #define twcslen wcslen
 #endif
 
+  // 复制字符串
 #define tstrncpy(dst, src, size) \
   do {                              \
     strncpy((dst), (src), (size));  \

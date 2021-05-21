@@ -2592,6 +2592,9 @@ int tscGetSTableVgroupInfo(SSqlObj *pSql, int32_t clauseIndex) {
   return code;
 }
 
+/**
+ * 初始化各种msg的实现方法
+ */
 void tscInitMsgsFp() {
   tscBuildMsg[TSDB_SQL_SELECT] = tscBuildQueryMsg;
   tscBuildMsg[TSDB_SQL_INSERT] = tscBuildSubmitMsg;

@@ -115,12 +115,18 @@ int32_t tscAcquireRpc(const char *key, const char *user, const char *secretEncry
 }
 
 void taos_init_imp(void) {
+  // 打印日志的缓冲区
   char temp[128]  = {0};
-  
+
+  // 没搞懂哪里用到了
   errno = TSDB_CODE_SUCCESS;
+
+  /* 初始化随机数发生器 */
   srand(taosGetTimestampSec());
+  // 算出本机时区与UTC的差值
   deltaToUtcInitOnce();
 
+  // 打印日志相关的，不管
   if (tscEmbedded == 0) {
 
     // Read global configuration.
@@ -150,11 +156,15 @@ void taos_init_imp(void) {
     tscDebug("Local End Point is:%s", tsLocalEp);
   }
 
+  // 没实现？
   taosSetCoreDump();
+  // 初始化啥呢
   tscInitMsgsFp();
+  // 队列大小
   int queueSize = tsMaxConnections*2;
 
   double factor = (tscEmbedded == 0)? 2.0:4.0;
+  // 算出线程数
   tscNumOfThreads = (int)(tsNumOfCores * tsNumOfThreadsPerCore / factor);
   if (tscNumOfThreads < 2) {
     tscNumOfThreads = 2;
