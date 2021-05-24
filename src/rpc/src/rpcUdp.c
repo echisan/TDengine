@@ -223,6 +223,7 @@ static void *taosRecvUdpData(void *param) {
       continue;
     } else {
       tTrace("UDP malloc mem:%p size:%d", tmsg, size);
+//      tInfo("======echisan====== UDP malloc mem:%p size:%d", tmsg, size)
     }
 
     tmsg += tsRpcOverhead;  // overhead for SRpcReqContext

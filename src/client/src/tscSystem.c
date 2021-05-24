@@ -128,6 +128,7 @@ void taos_init_imp(void) {
   deltaToUtcInitOnce();
 
   // 打印日志相关的，不管
+  tscInfo("=== tscEmbedded: %d", tscEmbedded);
   if (tscEmbedded == 0) {
 
     // Read global configuration.
@@ -194,6 +195,7 @@ void taos_init_imp(void) {
     // 哈希表
     tscTableMetaInfo = taosHashInit(1024, taosGetDefaultHashFunction(TSDB_DATA_TYPE_BINARY), true, HASH_ENTRY_LOCK);
 //    tscDebug("TableMeta:%p", tscTableMetaInfo);
+
     tscInfo("TableMeta:%p", tscTableMetaInfo);
   }
    

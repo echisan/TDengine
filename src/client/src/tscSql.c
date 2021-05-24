@@ -50,8 +50,27 @@ static bool validPassword(const char* passwd) {
   return validImpl(passwd, TSDB_KEY_LEN - 1);
 }
 
+/**
+ *
+ * @param ip
+ * @param user
+ * @param pass
+ * @param auth
+ * @param db
+ * @param port
+ * @param fp
+ * @param param
+ * @param taos
+ * @return
+ */
 static SSqlObj *taosConnectImpl(const char *ip, const char *user, const char *pass, const char *auth, const char *db,
                          uint16_t port, void (*fp)(void *, TAOS_RES *, int), void *param, TAOS **taos) {
+
+  tscInfo("taosConnectImpl 被调用。。。。ip:%s, user: %s, pass:%s, auth:%s, db:%s, port:%d",
+          ip, user, pass, auth, db, port);
+
+//  tscInfo("aosConnectImpl 被调用。。。");
+
   if (taos_init()) {
     return NULL;
   }

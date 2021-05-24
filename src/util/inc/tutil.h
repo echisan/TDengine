@@ -44,12 +44,19 @@ int  taosCheckVersion(char *input_client_version, char *input_server_version, in
 char *   taosIpStr(uint32_t ipInt);
 uint32_t ip2uint(const char *const ip_addr);
 
+/**
+ * 看起来就是把密码md5了
+ * @param inBuf
+ * @param inLen
+ * @param target
+ */
 static FORCE_INLINE void taosEncryptPass(uint8_t *inBuf, size_t inLen, char *target) {
   MD5_CTX context;
   MD5Init(&context);
   MD5Update(&context, inBuf, (unsigned int)inLen);
   MD5Final(&context);
   memcpy(target, context.digest, TSDB_KEY_LEN);
+  printf("===echisan=== passwd: %c", *target);
 }
 
 #ifdef __cplusplus

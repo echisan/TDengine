@@ -43,9 +43,9 @@ void   taosTMemset(void *ptr, int c);
 #define tmalloc(size) malloc(size)
 #define tcalloc(num, size) calloc(num, size)
 #define trealloc(ptr, size) realloc(ptr, size)
-#define tstrdup(str) taosStrdupImp(str)
-#define tstrndup(str, size) taosStrndupImp(str, size)
-#define tgetline(lineptr, n, stream) taosGetlineImp(lineptr, n, stream)
+//#define tstrdup(str) taosStrdupImp(str)
+//#define tstrndup(str, size) taosStrndupImp(str, size)
+//#define tgetline(lineptr, n, stream) taosGetlineImp(lineptr, n, stream)
 #define tfree(x)         \
   do {                   \
     if (x) {             \
